@@ -69,7 +69,7 @@ void write_pair(const caf::SRSpillProxy* sr, const caf::SRInteractionTruthDLPPro
 	    << CSV(vars::pi0_mass(i))
 	    << CSV(vars::pi0_mass(j))
 	    << CSV(cuts::all_1muNph_cut(j))
-	    << CSV(cuts::crt_pmt_veto(sr))
+	    << CSV(cuts::crtpmt_veto(sr))
             << CSV(j.volume_id)
             << std::endl;
 }
