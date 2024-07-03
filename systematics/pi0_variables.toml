@@ -1,0 +1,39 @@
+[data]
+columns = ['run', 'event', 'subrun', 'nu_id', 'image_id', 'id', 'trigger', 'category', 'category_topology', 'category_interaction_mode',
+           'true_visible_energy', 'reco_visible_energy', 'true_pi0_leading_photon_energy', 'reco_pi0_leading_photon_energy',
+           'true_pi0_subleading_photon_energy', 'reco_pi0_subleading_photon_energy', 'true_pi0_costheta', 'reco_pi0_costheta',
+           'true_pi0_leading_photon_start_to_vertex', 'reco_pi0_leading_photon_start_to_vertex', 'true_pi0_mass', 'reco_pi0_mass', 
+	   'selected_1muNph', 'crtpmt_match', 'cryostat'] 
+
+[categories]
+topos = [5, 4, 3, 2, 1, 0]
+topo_labels = ['Cosmic', 'Other', 'NC', '1$\mu$CEx', '1$\mu$N$\pi$$^{0}$', '1$\mu$1$\pi$$^{0}$']
+topo_colors = ['#f7a05e', '#926d00', '#dad085', '#e2514a', '#bc9eca', '#49a466']
+
+[variables.reco_pi0_costheta]
+bins = [20, -1, 1]
+title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
+xlabel = 'Reconstructed Cosine Opening Angle'
+ylabel = 'Entries'
+show_percentage='True'
+
+[variables.reco_pi0_leading_photon_energy]
+bins = [30, 0, 600]
+title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
+xlabel = 'Reconstructed Leading Photon Energy [MeV]'
+ylabel = 'Entries'
+show_percentage='True'
+
+[variables.reco_pi0_leading_photon_start_to_vertex]
+bins = [20, 0, 100]
+title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
+xlabel = 'Reconstructed Leading Photon Conversion Distance [cm]'
+ylabel = 'Entries'
+show_percentage='True'
+
+[variables.reco_pi0_mass]
+bins = [30, 0, 300]
+title = 'Selected 1$\mu$1$\pi$$^{0}$ Candidates'
+xlabel = 'Reconstructed Neutral Pion Mass [MeV/c$^{2}$]'
+ylabel = 'Entries'
+show_percentage='True'

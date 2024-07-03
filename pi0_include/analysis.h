@@ -106,13 +106,5 @@ namespace ana
     VARDLP_BIAS(kNuEnergy_1muX_X_bias,vars::neutrino_energy,vars::visible_energy,cuts::signal_1muX_notNp,cuts::all_1muX_cut);
     VARDLP_BIAS(kNuEnergy_1muX_othernu_bias,vars::neutrino_energy,vars::visible_energy,cuts::other_nu_1muX,cuts::all_1muX_cut);
 
-    // Variables for match validation.
-    PVARDLP_TRUE(kLowXTruth,vars::lowx,cuts::no_cut,cuts::matched);
-    PVAR_TTP(kLowX,vars::lowx,cuts::no_cut,cuts::no_cut,cuts::no_cut);
 
-    // Simple particle variables.
-    PVARDLP_TRUE(kCCOverlap,vars::overlap,cuts::no_cut,cuts::cathode_crossing_muon);
-    PVARDLP_TRUE(kNonCCOverlap,vars::overlap,cuts::no_cut,cuts::non_cathode_crossing_muon);
-    VARDLP_TRUE(kProtonScattering,vars::proton_scattering_cosine,cuts::no_cut);
-    VARDLP_TRUE(kLeadingProtonOverlap,vars::leading_proton_overlap,cuts::no_cut);
 }

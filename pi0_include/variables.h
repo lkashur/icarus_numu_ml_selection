@@ -768,7 +768,86 @@ namespace vars
 	  }
 	return energy;
       }
-    
+
+    /**
+     * Variable for finding pi0 leading shower start distance to vertex.
+     * @tparam T the type of interaction (true or reco).
+     * @param interaction to apply the variable on.
+     * @return the leading shower distance to vertex   
+     */
+    template<class T>
+      double pi0_leading_photon_start_to_vertex(const T & interaction)
+      {
+	
+	// Interaction vertex
+	TVector3 vertex(interaction.vertex[0], interaction.vertex[1], interaction.vertex[2]);
+	
+	// Photon info
+	vector<size_t> pi0_photon_idxs;
+	size_t i;
+	TVector3 sh_start;
+        double s_to_v(0);
+
+	// Truth
+        if constexpr (std::is_same_v<T, caf::SRInteractionTruthDLPProxy>)
+                       {
+                         pi0_photon_idxs = true_pi0_photon_idxs(interaction);
+                         i = pi0_photon_idxs[0];
+                       }
+	// Reco
+	else
+	  {
+	    pi0_photon_idxs = pi0_photon_idxs_by_dir(interaction);
+	    i = pi0_photon_idxs[0];
+	  }
+
+	sh_start.SetX(interaction.particles[i].start_point[0]);
+	sh_start.SetY(interaction.particles[i].start_point[1]);
+	sh_start.SetZ(interaction.particles[i].start_point[2]);
+
+	s_to_v = (sh_start - vertex).Mag();
+	return s_to_v;
+      }
+
+    /**
+     * Variable for finding pi0 subleading shower start distance to vertex.
+     * @tparam T the type of interaction (true or reco).
+     * @param interaction to apply the variable on.
+     * @return the leading shower distance to vertex
+     */
+    template<class T>
+      double pi0_subleading_photon_start_to_vertex(const T & interaction)
+      {
+
+        // Interaction vertex                                                                                                                    
+        TVector3 vertex(interaction.vertex[0], interaction.vertex[1], interaction.vertex[2]);
+
+        // Photon info                                                                                        
+        vector<size_t> pi0_photon_idxs;
+        size_t i;
+        TVector3 sh_start;
+        double s_to_v(0);
+
+        // Truth                                                                                                     
+        if constexpr (std::is_same_v<T, caf::SRInteractionTruthDLPProxy>)
+                       {
+                         pi0_photon_idxs = true_pi0_photon_idxs(interaction);
+                         i = pi0_photon_idxs[1];
+                       }
+        // Reco                                                                                                           
+        else
+          {
+            pi0_photon_idxs = pi0_photon_idxs_by_dir(interaction);
+            i = pi0_photon_idxs[1];
+          }
+
+        sh_start.SetX(interaction.particles[i].start_point[0]);
+        sh_start.SetY(interaction.particles[i].start_point[1]);
+        sh_start.SetZ(interaction.particles[i].start_point[2]);
+
+        s_to_v = (sh_start - vertex).Mag();
+        return s_to_v;
+      }
       
     /**
      * Find pi0 invariant mass.
@@ -833,21 +912,6 @@ namespace vars
         double overlap(const T & particle) { return particle.match.size() > 0 ? (double)particle.match_overlap[0] : 0.0; }
 
     /**
-     * Variable for the particles lowest x-coordinate.
-     * @tparam T the type of particle (true or reco)
-     * @param particle to apply the variable on.
-     * @return the lowest x-coordinate of the particle start/end points.
-    */
-    template<class T>
-        double lowx(const T & particle)
-        {
-            if(std::isnan(particle.start_point[0]) || std::isnan(particle.end_point[0]) || std::isinf(particle.start_point[0]) || std::isinf(particle.end_point[0]))
-                return -100000.;
-            else
-                return std::min(particle.start_point[0], particle.end_point[0]);
-        }
-
-    /**
      * Variable for the cosine of the track angle within the XZ plane.
      * @tparam T the type of particle (true or reco)
      * @param particle to apply the variable on.
@@ -872,136 +936,15 @@ namespace vars
             return cosine_theta_xz(interaction.particles[i]);
         }
 
-    /**
-     * Variable for cosine theta_xz (transverse) of the leading proton.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the cosine theta_xz of the leading proton.
-    */
-    template<class T>
-        double leading_proton_cosine_theta_xz(const T & interaction)
-        {
-            size_t i(leading_particle_index(interaction, 4));
-            return cosine_theta_xz(interaction.particles[i]);
-        }
+
+
+
+
+
+
+
     
-    /**
-     * Variable for the cosine of the opening angle between leading muon and
-     * proton.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the cosine of the opening angle between the leading muon and
-     * proton.
-    */
-    template<class T>
-        double cosine_opening_angle(const T & interaction)
-        {
-            auto & m(interaction.particles[leading_particle_index(interaction, 2)]);
-            auto & p(interaction.particles[leading_particle_index(interaction, 4)]);
-            double num(m.start_dir[0] * p.start_dir[0] + m.start_dir[1] * p.start_dir[1] + m.start_dir[2] * p.start_dir[2]);
-            return num;
-        }
 
-    /**
-     * Variable for the cosine of the opening angle between leading muon and
-     * proton in the transverse plane.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the cosine of the opening angle between the leading muon and
-     * proton in the transverse plane.
-    */
-    template<class T>
-        double cosine_opening_angle_transverse(const T & interaction)
-        {
-            auto & m(interaction.particles[leading_particle_index(interaction, 2)]);
-            auto & p(interaction.particles[leading_particle_index(interaction, 4)]);
-            double num(m.start_dir[0] * p.start_dir[0] + m.start_dir[1] * p.start_dir[1]);
-            num /= std::sqrt((1-m.start_dir[2]*m.start_dir[2])*(1-p.start_dir[2]*p.start_dir[2]));
-            return num;
-        }
-
-    /**
-     * Variable for the softmax score of the leading muon.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the softmax score of the leading muon.
-    */
-    template<class T>
-        double leading_muon_softmax(const T & interaction)
-        {
-            auto & m(interaction.particles[leading_particle_index(interaction, 2)]);
-            return m.pid_scores[2];
-        }
-    
-    /**
-     * Variable for the softmax score of the leading proton.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the softmax score of the leading proton.
-    */
-    template<class T>
-        double leading_proton_softmax(const T & interaction)
-        {
-            auto & p(interaction.particles[leading_particle_index(interaction, 4)]);
-            return p.pid_scores[4];
-        }
-
-    /**
-     * Variable for the cosine of the scattering angle between the primary
-     * proton and any attached proton.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the cosine of the scattering angle between the primary proton
-     * and any attached proton.
-     * @note This is only valid for interactions with a primary proton.
-    */
-    template<class T>
-        double proton_scattering_cosine(const T & interaction)
-        {
-            double cos(-2);
-            size_t i(leading_particle_index(interaction, 4));
-            if(interaction.particles.size() <= i)
-                return cos;
-            auto & p(interaction.particles[i]);
-            if(p.pid == 4 && p.is_primary)
-            {
-                /**
-                 * Check if the proton has a daughter proton by comparing the end
-                 * of the primary proton to the start of each other particle.
-                */
-                for(const auto & part : interaction.particles)
-                {
-                    if(part.pid == 4 && !part.is_primary && part.start_point[0] == p.end_point[0] && part.start_point[1] == p.end_point[1] && part.start_point[2] == p.end_point[2])
-                    {
-                        double dot(p.truth_momentum[0] * part.truth_momentum[0] + p.truth_momentum[1] * part.truth_momentum[1] + p.truth_momentum[2] * part.truth_momentum[2]);
-                        double mag1(std::sqrt(std::pow(p.truth_momentum[0], 2) + std::pow(p.truth_momentum[1], 2) + std::pow(p.truth_momentum[2], 2)));
-                        double mag2(std::sqrt(std::pow(part.truth_momentum[0], 2) + std::pow(part.truth_momentum[1], 2) + std::pow(part.truth_momentum[2], 2)));
-                        cos = dot / (mag1 * mag2);
-                    }
-                }
-
-            }
-            return cos;
-      }
-    
-    /**
-     * Variable for the overlap fraction of the leading proton.
-     * @tparam T the type of interaction (true or reco).
-     * @param interaction to apply the variable on.
-     * @return the overlap fraction of the leading proton.
-    */
-    template<class T>
-        double leading_proton_overlap(const T & interaction)
-        {
-            size_t i(leading_particle_index(interaction, 4));
-            /**
-             * Check that the leading particle is actually a proton.
-            */
-            if(interaction.particles[i].pid == 4)
-                return overlap(interaction.particles[i]);
-            else
-                return -1;
-        }
 }
 
 #endif
