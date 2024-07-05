@@ -34,8 +34,8 @@ void pi0_montecarlo()
      * 6. BNB neutrino (full flux) no cosmics (v09_89_01_01) [TPC Ind1 Increase Gain]
      * 7. BNB neutrino (full flux) no cosmics (v09_89_01_01) [PMT Decreased QE]
     */
-    //SpecContainer spectra("/pnfs/icarus/scratch/users/mueller/mc_run2_new_weights/flat/*.flat.root", "spectra_mc_v09_84_01_01r3.root", -1, 2.68171e20);
-    SpecContainer spectra("/pnfs/icarus/persistent/users/mueller/neutrino2024/systematics/sample_cv_v09_89_01_01r3.flat.root", "spectra_cv_v09_89_01_01r3.root", -1, -1);
+    SpecContainer spectra("/pnfs/icarus/scratch/users/mueller/mc_run2_new_weights/flat/*.flat.root", "spectra_mc_v09_84_01_01r3.root", -1, 2.68171e20);
+    //SpecContainer spectra("/pnfs/icarus/persistent/users/mueller/neutrino2024/systematics/sample_cv_v09_89_01_01r3.flat.root", "spectra_cv_v09_89_01_01r3.root", -1, -1);
 
     //SpecContainer spectra("/pnfs/icarus/persistent/users/mueller/neutrino2024/systematics/sample_cv_v09_89_01_01r3.flat.root", "spectra_cv_v09_89_01_01r3.root", -1, -1);
     //SpecContainer spectra("/pnfs/icarus/persistent/users/mueller/neutrino2024/systematics/sample_tpcuntunedsigshape_v09_89_01_01.flat.root", "spectra_tpcuntunedsigshape_v09_89_01_01r3.root", -1, -1);
