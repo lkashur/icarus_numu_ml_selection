@@ -11,6 +11,8 @@
 #define PION_MASS 139.57039
 #define PROTON_MASS 938.2720813
 
+#define MIN_PHOTON_ENERGY 40.0
+
 #include <algorithm>
 #include <iostream>
 #include <TVector3.h>
@@ -134,7 +136,7 @@ namespace vars
                 int num_primary_photon_daughters = 0;
                 for(auto e : pi0.second)
                   {
-                    if(e > 25) num_primary_photon_daughters++;
+                    if(e > MIN_PHOTON_ENERGY) num_primary_photon_daughters++;
                   }
 
                 if(num_primary_photon_daughters == 2)
@@ -287,7 +289,13 @@ namespace vars
      * @return the calo_ke of the particle.
     */
     template<class T>
-        double calo_ke(const T & particle) { return particle.calo_ke; }
+        double calo_ke(const T & particle)
+        {
+	  //return particle.calo_ke; // Nominal
+	  return (1.0238) * (1./77.0777) * (77.0777*(1./0.90)) * (0.87) * (1./0.78) * particle.calo_ke; // Tweak MC
+	  //return (0.9902) * (1./76.44) * (76.44*(1./0.92)) * (0.87) * (1./0.78) * particle.calo_ke; // Tweak data
+        }
+ 
 
     /**
      * Variable for particle csda_ke (muons only).
@@ -374,7 +382,7 @@ namespace vars
 		// Primary pi0
 		// Given 1mu1pi0 cut, we already know that any photons 
 		// meeting the below criteria belong to a single primary pi0
-		if(p.pid == 0 && p.is_primary && p.energy_init > 40 && p.ancestor_pdg_code == 111)
+		if(p.pid == 0 && p.is_primary && p.energy_init > MIN_PHOTON_ENERGY && p.ancestor_pdg_code == 111)
 		  {
 		    primary_pi0_map[p.ancestor_track_id].push_back({i, p.energy_init}); 
 		  }
@@ -386,14 +394,14 @@ namespace vars
 		int num_primary_photon_daughters = 0;
 		for(auto pair : pi0.second)
 		  {
-		    if(pair.second > 40) ++num_primary_photon_daughters;
+		    if(pair.second > MIN_PHOTON_ENERGY) ++num_primary_photon_daughters;
 		  }
 		
 		if(num_primary_photon_daughters == 2)
 		  {
 		    for(auto pair : pi0.second)
 		      {
-			if(pair.second > 40)
+			if(pair.second > MIN_PHOTON_ENERGY)
 			  {
 			    photon_energies.push_back(pair);
 			  }
@@ -464,7 +472,7 @@ namespace vars
 	// Output
 	vector<size_t> photon_idxs;
 
-	if(cuts::all_1muNph_cut(interaction))
+	if(cuts::all_1muNph_cut(interaction))  // REMEMBER TO CHANGE BETWEEN DATA AND MC
 	  {
 
 	    // Temp
@@ -474,7 +482,7 @@ namespace vars
 	    for(size_t i(0); i < interaction.particles.size(); ++i)
 	      {
 		const auto & p = interaction.particles[i];
-		if (p.pid != 0 || !p.is_primary || p.calo_ke < 40.0) continue;
+		if (p.pid != 0 || !p.is_primary || calo_ke(p) < MIN_PHOTON_ENERGY) continue;
 
 		TVector3 sh0_start(p.start_point[0], p.start_point[1], p.start_point[2]);
 		TVector3 sh0_dir(p.start_dir[0], p.start_dir[1], p.start_dir[2]);
@@ -483,7 +491,7 @@ namespace vars
 		  {
 		    const auto & q = interaction.particles[j];
 		    if(i == j) continue;
-		    if(q.pid != 0 || !q.is_primary || q.calo_ke < 40.0) continue;
+		    if(q.pid != 0 || !q.is_primary || calo_ke(q) < MIN_PHOTON_ENERGY) continue;
 		    
 		    // Shower start point and direction
 		    TVector3 sh1_start(q.start_point[0], q.start_point[1], q.start_point[2]);
@@ -600,7 +608,7 @@ namespace vars
 	// Output
 	vector<size_t> photon_idxs;
 
-	if(cuts::all_1muNph_cut(interaction))
+	if(cuts::all_1muNph_cut(interaction)) // REMEMBER TO CHANGE BETWEEN DATA AND MC
 	  {
 	    // Temp. storage
 	    vector< pair<size_t, double> > photon_energies;
@@ -609,9 +617,9 @@ namespace vars
 	    for(size_t i(0); i < interaction.particles.size(); ++i)
 	      {
 		const auto & p = interaction.particles[i];
-		if(p.pid == 0 && p.is_primary && p.calo_ke > 40)
+		if(p.pid == 0 && p.is_primary && calo_ke(p) > MIN_PHOTON_ENERGY)
 		  {
-		    photon_energies.push_back({i, p.calo_ke});
+		    photon_energies.push_back({i, calo_ke(p)});
 		  }
 	      }
 
@@ -738,7 +746,6 @@ namespace vars
 	return energy;		       
       }
     
-
     /**
      * Find subleading pi0 photon energy.
      * @tparam T the type of interaction (true or reco).

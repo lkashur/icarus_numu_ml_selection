@@ -6,6 +6,8 @@
 #ifndef CUTS_H
 #define CUTS_H
 
+#define MIN_PHOTON_ENERGY 40.0
+
 #include <functional>
 #include <vector>
 #include <string>
@@ -60,11 +62,13 @@ namespace cuts
             bool passes(false);
             if(p.is_primary)
             {
-                double energy(p.pid > 1 ? p.csda_ke : p.calo_ke);
+	      double energy(p.pid > 1 ? p.csda_ke : p.calo_ke);
                 if constexpr (std::is_same_v<T, caf::SRParticleTruthDLPProxy>)
 			       energy = p.energy_init; // p.energy_deposit
 
-                if((p.pid == 2 && energy > 143.425) || (p.pid < 2 && energy > 40))
+		//if((p.pid == 2 && energy > 143.425) || (p.pid < 2 && energy > MIN_PHOTON_ENERGY)) // Nominal
+		if((p.pid == 2 && energy > 143.425) || (p.pid < 2 && (1.0238) * (1./77.0777) * (77.0777*(1./0.90)) * (0.87) * (1./0.78) * energy > MIN_PHOTON_ENERGY)) // Tweak MC
+		//if((p.pid == 2 && energy > 143.425) || (p.pid < 2 && (0.9902) * (1./76.44) * (76.44*(1./0.92)) * (0.87) * (1./0.78) * energy > MIN_PHOTON_ENERGY)) // Tweak Data
                     passes = true;
             }
             return passes;
@@ -231,7 +235,7 @@ namespace cuts
             int num_primary_photon_daughters = 0;
             for(auto & e : pi0.second)
               {
-                if(e > 40) ++num_primary_photon_daughters;
+                if(e > MIN_PHOTON_ENERGY) ++num_primary_photon_daughters;
               }
 
             if(num_primary_photon_daughters == 2)

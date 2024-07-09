@@ -1,0 +1,56 @@
+[metadata]
+columns = ['run', 'event', 'subrun', 'nu_id', 'image_id', 'id', 'trigger', 'category', 'category_topology', 'category_mode']
+
+[plots.hist1d_fractional_1muNph]
+channel = '1muNph'
+systematics = {'reweightable' = 'Flux/Interaction'}
+multiplot = 'none'
+categorical_var = 'category_topology'
+categories = ['1mu1pi0', '1muNpi0', '1muCex', 'NC', 'Other', 'Cosmic']
+colors = [0, 1, 2, 3, 4, 5]
+ylabel = 'Entries'
+title = 'Selected 1muNph Candidates'
+show_percentage = true
+plot_kwargs = {histtype = 'barstacked'}
+
+[variables.true_visible_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.reco_visible_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.true_pi0_leading_photon_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.reco_pi0_leading_photon_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.true_pi0_subleading_photon_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.reco_pi0_subleading_photon_energy]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.true_pi0_costheta]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.reco_pi0_costheta]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.true_pi0_mass]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.reco_pi0_mass]
+var = 'reco_pi0_mass'
+bins = [50, 0, 500]
+ylim = {'1muNph' = [0, 2500]}
+xlabel = 'pi0 Mass [MeV]'
+
+[variables.1muNph]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.crtmpt_match]
+ylim = {'1muNph' = [0, 2500]}
+
+[variables.cryostat]
+ylim = {'1muNph' = [0, 2500]}

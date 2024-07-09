@@ -4,7 +4,7 @@ columns_mc = ['run', 'event', 'subrun', 'nu_id', 'image_id', 'id', 'trigger', 'c
               'true_pi0_subleading_photon_energy', 'reco_pi0_subleading_photon_energy', 'true_pi0_costheta', 'reco_pi0_costheta',
               'true_pi0_leading_photon_start_to_vertex', 'reco_pi0_leading_photon_start_to_vertex', 'true_pi0_subleading_photon_start_to_vertex', 
 	      'reco_pi0_subleading_photon_start_to_vertex', 'true_pi0_mass', 'reco_pi0_mass', 'selected_1muNph', 'crtpmt_match', 'cryostat'] 
-pot_mc = 1.72821e+20
+pot_mc = 2.68171e+20
 
 columns_data = ['run', 'event', 'subrun', 'image_id', 'id', 'reco_visible_energy', 'reco_pi0_leading_photon_energy', 'reco_pi0_subleading_photon_energy',
 	        'reco_pi0_costheta', 'reco_pi0_leading_photon_start_to_vertex', 'reco_pi0_subleading_photon_start_to_vertex', 'reco_pi0_mass', 'selected_1muNph',
@@ -13,7 +13,7 @@ pot_data = 1.92082e+19
 
 [categories]
 topos = [5, 4, 3, 2, 1, 0]
-topo_labels = ['Cosmic', 'Other', 'NC', '1$\mu$CEx', '1$\mu$N$\pi$$^{0}$', '1$\mu$1$\pi$$^{0}$']
+topo_labels = ['Cosmic', 'Other $\nu$', 'NC', '1$\mu$CEx', '1$\mu$N$\pi$$^{0}$', '1$\mu$1$\pi$$^{0}$']
 topo_colors = ['#f7a05e', '#926d00', '#dad085', '#e2514a', '#bc9eca', '#49a466']
 
 [variables.reco_pi0_costheta]
@@ -23,10 +23,24 @@ xlabel = 'Reconstructed Cosine Opening Angle'
 ylabel = 'Entries'
 show_percentage='True'
 
+[variables.true_pi0_leading_photon_energy]
+bins = [30, 0, 600]
+title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
+xlabel = 'True Leading Photon Energy [MeV]'
+ylabel = 'Entries'
+show_percentage='True'
+
 [variables.reco_pi0_leading_photon_energy]
 bins = [30, 0, 600]
 title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
 xlabel = 'Reconstructed Leading Photon Energy [MeV]'
+ylabel = 'Entries'
+show_percentage='True'
+
+[variables.true_pi0_subleading_photon_energy]
+bins = [30, 0, 600]
+title = 'Selected 1$\mu1$$\pi$$^{0}$ Candidates'
+xlabel = 'True Subleading Photon Energy [MeV]'
 ylabel = 'Entries'
 show_percentage='True'
 
@@ -52,7 +66,8 @@ ylabel = 'Entries'
 show_percentage='True'
 
 [variables.reco_pi0_mass]
-bins = [30, 0, 300]
+bins = [50, 0, 500]
+systematics = {'reweightable' = 'Flux/Interaction'}
 title = 'Selected 1$\mu$1$\pi$$^{0}$ Candidates'
 xlabel = 'Reconstructed Neutral Pion Mass [MeV/c$^{2}$]'
 ylabel = 'Entries'

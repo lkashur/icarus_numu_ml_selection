@@ -3,6 +3,7 @@ pandas
 pyyaml
 uproot
 matplotlib
+seaborn
 h5py
 toml
 tqdm
